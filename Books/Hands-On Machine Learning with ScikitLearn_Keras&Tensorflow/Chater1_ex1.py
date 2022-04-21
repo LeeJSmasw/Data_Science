@@ -20,3 +20,14 @@ gdp_per_capita = pd.read_csv("gdp_per_captia.csv", thousands=',', delimiter='\t'
 
 - 변환기 : 
 '''
+
+# 교차 검증을 사용한 평가
+'''
+1. K-겹 교차 검증(K-Fold Cross-Validaiton)기능을 사용하는 방법이 있습니다.
+다음 코드는 훈련 세트를 폴드라 불리는 10개의 서브셋으로 무작위로 분할합니다.
+그런 다음 결정 트리 모델을 10번 훈련하고 평가하는데, 매번 다른 폴드를 선ㅌ갷 
+
+''' 
+from skelarn.model_selection import cross_val_socre
+scores = cross_val_socre(tree_reg, housing_prepared, housing_labels, scoring='neg_mean_squared_error',cv=10)
+tree_rmse_scores = np..sqrt(-scores)
