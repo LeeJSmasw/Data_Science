@@ -30,4 +30,20 @@ gdp_per_capita = pd.read_csv("gdp_per_captia.csv", thousands=',', delimiter='\t'
 ''' 
 from skelarn.model_selection import cross_val_socre
 scores = cross_val_socre(tree_reg, housing_prepared, housing_labels, scoring='neg_mean_squared_error',cv=10)
-tree_rmse_scores = np..sqrt(-scores)
+tree_rmse_scores = np.sqrt(-scores)
+
+def display_score(scores):
+    print("점수", scores)
+    print("평균", scores.mean())
+    print("표쥰편차", socres.std())
+
+import joblib
+
+joblib.dump(my_model, 'my_model.pkl') #이거 데이터 모델을 사용하기
+my_mode_loaded = joblib.load("my_model.pkl")
+
+from sklearn.ensemble import RandomForestRegressor
+forest_reg = RandomForestRegressor()
+forest_reg.fit(housing_prepared, housing_labels)
+
+forest_rmse # 점수 도출
