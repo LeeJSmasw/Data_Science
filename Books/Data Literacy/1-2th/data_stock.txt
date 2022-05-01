@@ -1,0 +1,61 @@
+## Split the time-series data into training seq X and output value Y
+
+def extract_seqX_outcomeY(data, N, offset):
+    """
+    Split time-series into training sequence X and outcome value Y
+    Args:
+        data - dataset 
+        N - window size, e.g., 50 for 50 days of historical stock prices
+        offset - position to start the split
+    """
+    X, y = [], []
+    
+    for i in range(offset, len(data)):
+        X.append(data[i-N:i])
+        y.append(data[i])
+    
+    return np.array(X), np.array(y)
+Calculate the RMSE and MAPE (%),
+
+#### Calculate the metrics RMSE and MAPE ####
+
+def calculate_rmse(y_true, y_pred):
+    """
+    Calculate the Root Mean Squared Error (RMSE)  
+    """
+    rmse = np.sqrt(np.mean((y_true-y_pred)**2))                   
+    return rmse
+
+def calculate_mape(y_true, y_pred): 
+    """
+    Calculate the Mean Absolute Percentage Error (MAPE) %
+    """
+    y_pred, y_true = np.array(y_pred), np.array(y_true)    
+    mape = np.mean(np.abs((y_true-y_pred) / y_true))*100    
+    return mape
+Calculate the evaluation metrics for technical analysis and log to Neptune (with arg. logNeptune = True),
+
+def calculate_perf_metrics(var, logNeptune=True, logmodelName='Simple MA'):
+    ### RMSE 
+    rmse = calculate_rmse(np.array(stockprices[train_size:]['Close']), np.array(stockprices[train_size:][var]))
+    ### MAPE 
+    mape = calculate_mape(np.array(stockprices[train_size:]['Close']), np.array(stockprices[train_size:][var]))
+    
+    ## Log images to Neptune new version 
+    if logNeptune:        
+        npt_exp['RMSE'].log(rmse)
+        npt_exp['MAPE (%)'].log(mape)
+    
+    return rmse, mape
+Plot the trend of the stock prices and log the plot to Neptune (with arg. with arg. logNeptune = True), 
+
+def plot_stock_trend(var, cur_title, stockprices=stockprices, logNeptune=True, logmodelName='Simple MA'):
+    ax = stockprices[['Close', var,'200day']].plot(figsize=(20, 10))
+    plt.grid(False)
+    plt.title(cur_title)
+    plt.axis('tight')
+    plt.ylabel('Stock Price ($)')
+
+    ## Log images to Neptune new version 
+    if logNeptune:
+        npt_exp[f'Plot of Stock Predictions with {logmodelName}'].upload(neptune.types.File.as_image(ax.get_figure()))
