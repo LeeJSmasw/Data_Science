@@ -240,7 +240,11 @@ DCG (Discounted Cumulated Gain)
 불균형 데이터의 해결 
 
 1.  Undersampling majority
-
-2. Oversampling minority
+ - Major Class 원소를 무작위로 소수만 선택 
+ - 정보를 잃는 꼴이됨..  / 아까워
  
+2. Oversampling minority
+ - 소수의 집단에 대해서 더 샘플링 하는건데 / 조금 어려움 // 서른건을 백건으로 늘려!
+ - SMOTE = Synthetic Minority Over-Sampling Techinque // 개별의 아이템을 높이는것보단,, 
 
+임벨런스 되어 있는 데이터 셋 // 불균형 데이터를 해결하기 / 정보를 크리티컬 하는 것 
