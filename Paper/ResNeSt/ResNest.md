@@ -96,3 +96,35 @@ ResNeSt Backbone (Hang Zhang)
 Detectron Models (Chongruo Wu, Zhongyue Zhang)
 Semantic Segmentation (Yi Zhu)
 Distributed Training (Haibin Lin)
+
+
+3.2 The AnyNet Design Space
+이 section에서는 표준이며 고정된 네트워크르 블럭을 가정한 네트워크의 구조를 탐구하는 것이다. 즉, 블럭의 수, 블럭의 너비 그리고 블럭의 다른 매개변수들에 대한 탐구다. 이러한 것들은 계산량, 매개변수 그리고 메모리의 분포를 결정하는 동시에 정확도와 효율성을 결정한다.
+
+ 
+
+AnyNet의 디자인 공간은 간단하면서 쉬운데, 그림 3의 a와 같이 입력단의 stem, 그 뒤에 body 그리고 class를 예측하는 head 부분으로 나눠져있다. 여기서 stem과 head를 최대한 고정시키고 네트워크의 body를 변경하여 계산량과 정확도를 결정한다.
+
+
+body는 총 4개의 stages로 구성되어 있으며, 계속해서 resolution을 줄여간다. (그림 3의 b) 각 stage는 개별적인 block들을 가지며, 각각의 stage는 block의 갯수 (di), block의 너비 (wi), 그리고 block 매개변수를 가진다. 이러한 AnyNet의 구조는 매우 방대하다.
+
+ 
+
+그림 4에서 볼 수 있듯이 대부분의 실험에서는 residual bottleneck blcok을 사용하며, 이것을 x block 이라고 지칭한다. 그리고 이러한 block으로 이뤄진 네트워크를 AnyNetX라고 하며, 네트워크 구조가 최적화 되었을 때, 놀랍운 효율성을 보인다.
+
+ 
+
+
+AnyNetX의 디자인 공간은 총 16단계로 정해지는데 4개의 stage와 각 stage에서 4개의 매개변수를 가진다. blocks의 수 (di), block의 너비 (wi), bottleneck ratio (bi), 그리고 group width (gi)이다. di≤16인 log-uniform sampling, wi≤1024인 8의 배수, bi∈1,2,4, gi∈1,2,...,32 이다. n=500, epoch 은 10, 그리고 목표 계산량은 300MF~400MF이다.
+
+ 
+
+총 1018의 가능성이 나오며 이것이 AnyNetX의 디자인 공간이다. ~1018의 최고성능 모델을 찾는 것이 아닌 일반적인 디자인 원칙을 찾는데 집중했으며 디자인 공간을 이해하고 재정의 하는데 도움이 된다. 그리고 4가지의 접근법을 사용해 AnyNetX를 총5가지로 나눴다.
+
+ 
+
+AnyNeyXA 초기의 AnyNetX의 디자인 공간이다.
+
+ 
+
+AnyNetXB 여기서 제한하는 부분은 bottleneck ratio를 공유하는 것이다. 즉, 모든 stage에서 bottleneck ratio bi=b로 고정한다. 똑같이 500개의 모델을 만들어 AnyNetXA와 비교했으며, 그림 5의 좌측은 결과이다. 이것으로 보아 bottlenck ratio는 그렇게 큰 차이를 못내는 것 같으며 그림 5의 우측은 b에 따른 결과를 보여준다.
